@@ -3,25 +3,33 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 // - Recursive function to generate 
-function generateFileTree(dirPath: string, basePath: string = ''): string {
+function generateFileTree(
+    dirPath: string,
+    basePath: string = '',
+    prefix: string = ''
+): string {
     let tree = '';
     const files = fs.readdirSync(dirPath);
 
-    for (const file of files) {
+    files.forEach((file, index) => {
         const fullPath = path.join(dirPath, file);
         const relativePath = path.relative(basePath, fullPath);
         const stats = fs.statSync(fullPath);
+        const isLast = index === files.length - 1;
+
+        const connector = isLast ? '└── ' : '├── ';
+        tree += `${prefix}${connector}${file}\n`;
 
         if (stats.isDirectory()) {
-            tree += `\n${relativePath}/\n`;
-            tree += generateFileTree(fullPath, basePath); 
-        } else {
-            tree += `- ${relativePath}\n`;  // Add file to tree
+            const newPrefix = prefix + (isLast ? '    ' : '│   ');
+            tree += generateFileTree(fullPath, basePath, newPrefix);
         }
-    }
+    });
 
     return tree;
 }
+
+
 
 // - generates the file tree and adds it to the clipboard or into a new README.md file
 export function activate(context: vscode.ExtensionContext) {
