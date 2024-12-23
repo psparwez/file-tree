@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
 
-// Recursive function to generate file tree
+// - Recursive function to generate 
 function generateFileTree(dirPath: string, basePath: string = ''): string {
     let tree = '';
     const files = fs.readdirSync(dirPath);
@@ -14,7 +14,7 @@ function generateFileTree(dirPath: string, basePath: string = ''): string {
 
         if (stats.isDirectory()) {
             tree += `\n${relativePath}/\n`;
-            tree += generateFileTree(fullPath, basePath);  // Recursively process directories
+            tree += generateFileTree(fullPath, basePath); 
         } else {
             tree += `- ${relativePath}\n`;  // Add file to tree
         }
@@ -23,7 +23,7 @@ function generateFileTree(dirPath: string, basePath: string = ''): string {
     return tree;
 }
 
-// Command that generates the file tree and adds it to the clipboard or into a new README.md file
+// - generates the file tree and adds it to the clipboard or into a new README.md file
 export function activate(context: vscode.ExtensionContext) {
     let disposable = vscode.commands.registerCommand('file-tree.generate', () => {
         const folderUri = vscode.workspace.workspaceFolders?.[0].uri;
@@ -36,7 +36,7 @@ export function activate(context: vscode.ExtensionContext) {
         const folderPath = folderUri.fsPath;
         const tree = generateFileTree(folderPath);
 
-        // Ask the user where to save the file tree (Clipboard or a new README.md)
+        // - save the file tree (Clipboard or a new README.md)
         vscode.window.showQuickPick(['Copy to clipboard', 'Insert into README.md'], { placeHolder: 'Where to insert the file tree?' })
             .then(selection => {
                 if (selection === 'Copy to clipboard') {
@@ -62,5 +62,5 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(disposable);
 }
 
-// This method is called when your extension is deactivated
+// - extension is deactivated
 export function deactivate() {}

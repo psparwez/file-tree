@@ -14,8 +14,8 @@
   "contributes": {
     "commands": [
       {
-        "command": "file-tree.helloWorld",
-        "title": "Hello World"
+        "command": "file-tree.generate",
+        "title": "Generate File Tree"
       }
     ]
   },
